@@ -3,18 +3,31 @@ import numpy as np
 import json
 import sys
 import requests
-import matplotlib.pyplot as plt
-#%matplotlib inline
+import glob, os
 from pyti.exponential_moving_average import exponential_moving_average as ema
-#from pyti.relative_strength_index import relative_strength_index as rsi
 
 import talib
 
-pd.set_option("display.max_rows", 150, "display.min_rows", 150)
+rows = 5 #150
+pd.set_option("display.max_rows", rows, "display.min_rows", rows)
 
 #pd.options.display.max_rows = 70
 
 print("Loading last week's trading data (1m period) for TSLA from Yahoo...")
+
+
+#os.chdir("/mydir")
+frames = []
+for file in glob.glob("*.pick"):
+    df = pd.read_pickle(file)
+    frames.append(df)
+#    df = df.from_pickle(file)
+    #print(df)
+
+df = pd.concat(frames)
+df = df.sort_index()
+print(df)
+sys.exit()
 
 url = 'https://query1.finance.yahoo.com/v8/finance/chart/TSLA?region=US&lang=en-US&includePrePost=false&interval=1m&range=7d&corsDomain=finance.yahoo.com&.tsrc=finance'
 
