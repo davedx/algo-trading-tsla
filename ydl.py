@@ -6,11 +6,13 @@ import calendar
 
 pd.set_option("display.max_rows", 150, "display.min_rows", 150)
 
-print("Loading trading data (7d @ 1m) for TSLA from Yahoo...")
+symbol = "TSLA"
 
-def download_period(t1, t2):
+print("Scraping data for "+symbol+" from Yahoo...")
+
+def download_period(symbol, t1, t2):
   t2 = t2-1
-  url = 'https://query1.finance.yahoo.com/v8/finance/chart/TSLA?region=US&lang=en-US&includePrePost=false&interval=1m&corsDomain=finance.yahoo.com&.tsrc=finance'
+  url = 'https://query1.finance.yahoo.com/v8/finance/chart/'+symbol+'?region=US&lang=en-US&includePrePost=false&interval=1m&corsDomain=finance.yahoo.com&.tsrc=finance'
   if t1 != None and t2 != None:
     url = url + '&period1='+str(t1)+'&period2='+str(t2)
 
@@ -38,7 +40,7 @@ def download_period(t1, t2):
   c1 = closes[0]
   c2 = closes[-1]
   print("t1: "+str(t1)+" t2: "+str(t2)+" c1: "+str(c1)+" c2: "+str(c2))
-  df.to_pickle("TSLA_"+str(t1)+"_"+str(t2)+".pick")
+  df.to_pickle(symbol+"_"+str(t1)+"_"+str(t2)+".pick")
   return t1
 
 seven_days_in_s = 60*60*24*7
@@ -46,4 +48,4 @@ time_ago_in_past = seven_days_in_s * 4
 start_time_in_s = calendar.timegm(time.gmtime())
 
 for t in range(start_time_in_s - time_ago_in_past, start_time_in_s, seven_days_in_s):
-  download_period(t, t+seven_days_in_s)
+  download_period(symbol, t, t+seven_days_in_s)

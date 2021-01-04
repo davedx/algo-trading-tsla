@@ -1,3 +1,0 @@
-|ERROR|2020-10-17 16:37:30,235|Connection error: Your token is not valid, please contact admin@fxcm.com
-|ERROR|2020-10-17 16:41:52,902|Connection error: Your token is not valid, please contact admin@fxcm.com
-|ERROR|2020-10-17 16:48:14,725|Connection error: Your token is not valid, please contact admin@fxcm.com
