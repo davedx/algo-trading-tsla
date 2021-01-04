@@ -9,3 +9,14 @@ It uses a simple EMA crossover strategy which aborts the buy if the RSI indicate
 The script does a grid search to find the best parameters for the EMA and RSI algos.
 
 It back tests with price data scraped from yahoo finance (the ydl.py script).
+
+## Dependencies
+
+You can use pip to install everything. It relies upon:
+
+  pandas
+  numpy
+  json
+  requests
+  talib
+
