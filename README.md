@@ -14,9 +14,9 @@ It back tests with price data scraped from yahoo finance (the ydl.py script).
 
 You can use pip to install everything. It relies upon:
 
-  pandas
-  numpy
-  json
-  requests
-  talib
+ pandas
+ numpy
+ json
+ requests
+ talib
 
