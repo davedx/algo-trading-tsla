@@ -9,13 +9,12 @@ from pyti.exponential_moving_average import exponential_moving_average as ema
 import talib
 
 rows = 25 #150
-pd.set_option("display.max_rows", rows, "display.min_rows", rows)
+pd.set_option("display.max_rows", rows, "display.min_rows", rows) # to tweak output
 
 #pd.options.display.max_rows = 70
 
 print("Loading trading data...")
 
-#os.chdir("/mydir")
 df = pd.DataFrame()
 for file in glob.glob("TSLA*.pick"):
     tdf = pd.read_pickle(file)
@@ -58,8 +57,8 @@ def trade(ema_fast, ema_slow, rsi, rsi_max, roc_min):
     bought_at = 0
     profit = 0
     num_trades = 0
-    commission = 0.35
-    balance = 50000
+    commission = 0.35   # commission per trade in USD
+    balance = 50000     # trading account starting balance in USD
     initial_investment = balance
     moves_up = 0
     moves_down = 0
@@ -81,12 +80,16 @@ def trade(ema_fast, ema_slow, rsi, rsi_max, roc_min):
             try:
                 vix_price = vix.loc[idx]['closes']
             except:
+                # sometimes VIX data is missing
                 #print("no entry for "+str(idx))
                 vix_price = 15
             vix_confidence = (60 - min(60, vix_price)) / 60 # 0-60/60 = 0-1
             rsi_confidence = (100 - row['rsi']) / 100 # 0-1
 
-            num_shares = math.floor(balance / price) #* vix_confidence #* rsi_confidence # vix_confidence * rsi_confidence
+            # IDEA: Try and calculate a confidence level using something like:
+            # confidence = vix_confidence * rsi_confidence
+            # then buy a number of shares relative to the confidence level
+            num_shares = math.floor(balance / price)
             bought_at = price
             balance -= num_shares * bought_at
             #print(str(idx) + " vix: "+str(vix_price)+" Buy: "+str(num_shares)+" at "+str(bought_at)+" bal: "+str(balance))
@@ -110,7 +113,6 @@ def trade(ema_fast, ema_slow, rsi, rsi_max, roc_min):
 
 max_profit = 0
 
-# restart at 7/12
 def grid_search():
     for ema_f in range(3, 12):
         for ema_s in range(8, 20):
@@ -127,6 +129,7 @@ for rsi in range(3, 9):
         profit = trade(5, 8, rsi, rsi_max, 1)
         if profit > max_profit:
             max_profit = profit
+
 print("max profit: "+str(max_profit))
 
 #trade(5, 12, 6, 74, 0.3)
@@ -134,7 +137,7 @@ print("max profit: "+str(max_profit))
 
 # Explore higher rsi_max
 
-# 2020-09-22 - 2020-10-29
+# TSLA, 2020-09-22 - 2020-10-29
 # ema_fast: 3 ema_slow: 10 rsi: 5 rsi_max: 74 trades: 528 profit: 5950.521826171954 roi: 1.1264024365234375
 # ema_fast: 3 ema_slow: 10 rsi: 7 rsi_max: 79 trades: 551 profit: 6669.009869384853 roi: 1.1410941973876954
 # ema_fast: 4 ema_slow: 9 rsi: 7 rsi_max: 79 trades: 501 profit: 7705.01838378914 roi: 1.1611143676757814
